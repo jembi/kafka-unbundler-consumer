@@ -1,5 +1,5 @@
 {
-  "name": "kafka-processor-unbundler",
+  "name": "kafka-unbundler-consumer",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
@@ -8,6 +8,6 @@
   },
   "scripts": {
     "start": "node index.js",
-    "build": "docker build -t kafka-processor-unbundler ."
+    "build": "docker build -t kafka-unbundler-consumer ."
   }
 }

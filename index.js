@@ -6,11 +6,11 @@ const kafkaPort = process.env.KAFKA_PORT || '9092';
 const kafka = new Kafka({
   logLevel: logLevel.INFO,
   brokers: [`${kafkaHost}:${kafkaPort}`],
-  clientId: 'kafka-processor-unbundler',
+  clientId: 'kafka-unbundler-consumer',
 });
 
 const topic = '2xx';
-const consumer = kafka.consumer({ groupId: 'kafka-processor-unbundler' });
+const consumer = kafka.consumer({ groupId: 'kafka-unbundler-consumer' });
 const producer = kafka.producer();
 
 const run = async () => {
@@ -42,14 +42,14 @@ const run = async () => {
             messages: resourceMap[resourceType],
           })
           .catch(e =>
-            console.error(`[kafka-processor-unbundler] ${e.message}`, e)
+            console.error(`[kafka-unbundler-consumer] ${e.message}`, e)
           );
       });
     },
   });
 };
 
-run().catch(e => console.error(`[kafka-processor-unbundler] ${e.message}`, e));
+run().catch(e => console.error(`[kafka-unbundler-consumer] ${e.message}`, e));
 
 const errorTypes = ['unhandledRejection', 'uncaughtException'];
 const signalTraps = ['SIGTERM', 'SIGINT', 'SIGUSR2'];
