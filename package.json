@@ -1,13 +1,18 @@
 {
   "name": "kafka-unbundler-consumer",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "index.ts",
   "license": "MIT",
   "dependencies": {
-    "kafkajs": "2.0.2"
+    "kafkajs": "2.0.2",
+    "typescript": "^4.7.4"
   },
   "scripts": {
     "start": "node index.js",
+    "bundle": "npx tsc",
     "build": "docker build -t jembi/kafka-unbundler-consumer ."
+  },
+  "devDependencies": {
+    "@types/node": "^18.7.6"
   }
 }
