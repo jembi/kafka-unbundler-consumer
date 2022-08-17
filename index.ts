@@ -1,10 +1,38 @@
 const { Kafka, logLevel } = require('kafkajs');
 
+interface ConsumerMessage {
+  topic: string;
+  partition: string;
+  message: Message;
+}
+
 interface Message {
   offset: string;
   timestamp: string;
   key: string;
   value: string;
+}
+
+interface MapItem {
+  key: string;
+  value: string;
+}
+
+interface Bundle {
+  entry: Entry[];
+}
+
+interface Entry {
+  resource: Resource;
+}
+
+interface Resource {
+  resourceType: string;
+  id: string;
+}
+
+interface ResourceMap {
+  [name: string]: MapItem[];
 }
 
 const kafkaHost = process.env.KAFKA_HOST || 'localhost';
@@ -25,23 +53,13 @@ const run = async () => {
   await producer.connect();
   await consumer.subscribe({ topic, fromBeginning: true });
   await consumer.run({
-    eachMessage: async ({
-      topic,
-      partition,
-      message,
-    }: {
-      topic: string;
-      partition: string;
-      message: Message;
-    }) => {
+    eachMessage: async ({ topic, partition, message }: ConsumerMessage) => {
       const prefix = `${topic}[${partition} | ${message.offset}] / ${message.timestamp}`;
       console.log(`- ${prefix} ${message.key}#${message.value}`);
 
-      const bundle: {
-        entry: Array<{ resource: { resourceType: string, id: string } }>;
-      } = JSON.parse(message.value);
+      const bundle: Bundle = JSON.parse(message.value);
 
-      let resourceMap: {[key: string]: Array<{key: string, value: string}>} = {};
+      let resourceMap: ResourceMap = {};
 
       bundle.entry.forEach(entry => {
         if (!resourceMap[entry.resource.resourceType]) {
@@ -67,7 +85,9 @@ const run = async () => {
   });
 };
 
-run().catch((e: Error) => console.error(`[kafka-unbundler-consumer] ${e.message}`, e));
+run().catch((e: Error) =>
+  console.error(`[kafka-unbundler-consumer] ${e.message}`, e)
+);
 
 const errorTypes = ['unhandledRejection', 'uncaughtException'];
 const signalTraps = ['SIGTERM', 'SIGINT', 'SIGUSR2'];
