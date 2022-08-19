@@ -1,39 +1,6 @@
-const { Kafka, logLevel } = require('kafkajs');
-
-interface ConsumerMessage {
-  topic: string;
-  partition: string;
-  message: Message;
-}
-
-interface Message {
-  offset: string;
-  timestamp: string;
-  key: string;
-  value: string;
-}
-
-interface MapItem {
-  key: string;
-  value: string;
-}
-
-interface Bundle {
-  entry: Entry[];
-}
-
-interface Entry {
-  resource: Resource;
-}
-
-interface Resource {
-  resourceType: string;
-  id: string;
-}
-
-interface ResourceMap {
-  [name: string]: MapItem[];
-}
+import { Kafka, logLevel } from 'kafkajs';
+import { splitResources } from './utils';
+import { Bundle, ResourceMap } from './types';
 
 const kafkaHost = process.env.KAFKA_HOST || 'localhost';
 const kafkaPort = process.env.KAFKA_PORT || '9092';
@@ -48,28 +15,18 @@ const topic = '2xx';
 const consumer = kafka.consumer({ groupId: 'kafka-unbundler-consumer' });
 const producer = kafka.producer();
 
-const run = async () => {
+const runs = async () => {
   await consumer.connect();
   await producer.connect();
   await consumer.subscribe({ topic, fromBeginning: true });
   await consumer.run({
-    eachMessage: async ({ topic, partition, message }: ConsumerMessage) => {
+    eachMessage: async ({ topic, partition, message }) => {
       const prefix = `${topic}[${partition} | ${message.offset}] / ${message.timestamp}`;
-      console.log(`- ${prefix} ${message.key}#${message.value}`);
+      console.log(`- ${prefix} ${message.key}#${message.value?.toString()}`);
 
-      const bundle: Bundle = JSON.parse(message.value);
+      const bundle: Bundle = JSON.parse(message.value?.toString() ?? '');
 
-      let resourceMap: ResourceMap = {};
-
-      bundle.entry.forEach(entry => {
-        if (!resourceMap[entry.resource.resourceType]) {
-          resourceMap[entry.resource.resourceType] = [];
-        }
-        resourceMap[entry.resource.resourceType].push({
-          key: entry.resource.id,
-          value: JSON.stringify(entry),
-        });
-      });
+      const resourceMap: ResourceMap = splitResources(bundle);
 
       Object.keys(resourceMap).forEach(resourceType => {
         producer
@@ -85,7 +42,7 @@ const run = async () => {
   });
 };
 
-run().catch((e: Error) =>
+runs().catch((e: Error) =>
   console.error(`[kafka-unbundler-consumer] ${e.message}`, e)
 );
 

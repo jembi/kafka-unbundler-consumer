@@ -10,7 +10,7 @@
     "@types/node": "18.7.6"
   },
   "scripts": {
-    "start": "ts-node index.ts",
+    "start": "ts-node src/index.ts",
     "build": "docker build -t jembi/kafka-unbundler-consumer .",
     "test": "ts-mocha -p ./tsconfig.json test/**/*.spec.ts"
   },

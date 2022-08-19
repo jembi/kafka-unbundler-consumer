@@ -3,7 +3,7 @@ ENV NODE_ENV=production
 
 WORKDIR /app
 
-ADD . .
+COPY . .
 
 RUN yarn --production --frozen-lockfile
 
