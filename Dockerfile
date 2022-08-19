@@ -1,12 +1,13 @@
-FROM node:alpine
+FROM node:gallium-bullseye-slim AS base
 ENV NODE_ENV=production
 
 WORKDIR /app
 
-COPY ["package.json", "yarn.lock", "./"]
+ADD package.json .
+ADD yarn.lock .
+RUN yarn --production --frozen-lockfile
 
-RUN yarn install --frozen-lockfile
+ADD index.ts .
+ADD utils.ts .
 
-COPY . .
-
-CMD [ "node", "index.js" ]
+ENTRYPOINT [ "yarn", "start" ]

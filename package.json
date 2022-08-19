@@ -4,22 +4,22 @@
   "main": "index.ts",
   "license": "MIT",
   "dependencies": {
-    "kafkajs": "2.0.2"
+    "kafkajs": "2.0.2",
+    "ts-node": "^8.10.2",
+    "typescript": "^4.7.4",
+    "@types/node": "^18.7.6"
   },
   "scripts": {
-    "start": "node index.js",
-    "bundle": "npx tsc index.ts",
-    "build": "npx tsc index.ts && docker build -t jembi/kafka-unbundler-consumer .",
+    "start": "ts-node index.ts",
+    "build": "docker build -t jembi/kafka-unbundler-consumer .",
     "test": "ts-mocha -p ./tsconfig.json test/**/*.spec.ts"
   },
   "devDependencies": {
     "@types/chai": "^4.3.3",
     "@types/expect": "^24.3.0",
     "@types/mocha": "^9.1.1",
-    "@types/node": "^18.7.6",
     "chai": "^4.3.6",
     "mocha": "^10.0.0",
-    "ts-mocha": "^10.0.0",
-    "typescript": "^4.7.4"
+    "ts-mocha": "^10.0.0"
   }
 }
