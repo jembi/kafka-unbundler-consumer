@@ -1,6 +1,6 @@
 import { expect } from 'chai';
-import { splitResources } from '../utils';
-import { Bundle } from '..';
+import { splitResources } from '../src/utils';
+import { Bundle } from '../src/types';
 
 const emptyMockMessages: Bundle = {
   entry: [],

@@ -3,11 +3,8 @@ ENV NODE_ENV=production
 
 WORKDIR /app
 
-ADD package.json .
-ADD yarn.lock .
-RUN yarn --production --frozen-lockfile
+ADD . .
 
-ADD index.ts .
-ADD utils.ts .
+RUN yarn --production --frozen-lockfile
 
 ENTRYPOINT [ "yarn", "start" ]

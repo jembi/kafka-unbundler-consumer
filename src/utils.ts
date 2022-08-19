@@ -1,4 +1,4 @@
-import { Bundle, ResourceMap } from '.';
+import { Bundle, ResourceMap } from './types';
 
 export function splitResources(bundle: Bundle) {
   const resourceMap: ResourceMap = {};

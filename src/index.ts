@@ -1,27 +1,6 @@
 import { Kafka, logLevel } from 'kafkajs';
 import { splitResources } from './utils';
-
-export interface Bundle {
-  entry: Entry[];
-}
-
-export interface ResourceMap {
-  [name: string]: MapItem[];
-}
-
-interface MapItem {
-  key: string;
-  value: string;
-}
-
-interface Entry {
-  resource: Resource;
-}
-
-interface Resource {
-  resourceType: string;
-  id: string;
-}
+import { Bundle, ResourceMap } from './types';
 
 const kafkaHost = process.env.KAFKA_HOST || 'localhost';
 const kafkaPort = process.env.KAFKA_PORT || '9092';
