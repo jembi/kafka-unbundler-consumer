@@ -1,20 +1,14 @@
 {
   "files.eol": "\n",
   "files.insertFinalNewline": true,
+  "files.exclude": {
+    "node_modules": true
+  },
   "editor.formatOnSave": true,
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "editor.codeActionsOnSave": {
     "source.fixAll": true
-  },
-  "json.schemas": [
-    {
-      "fileMatch": ["package-metadata.json"],
-      "url": "./schemas/package-metadata.json"
-    }
-  ],
-  "yaml.schemas": {
-    "./schemas/config.json": "config.yml"
   }
 }
