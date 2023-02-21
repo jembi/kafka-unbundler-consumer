@@ -2,12 +2,17 @@ import { Kafka, logLevel } from 'kafkajs';
 import { splitResources } from './utils';
 import { Bundle, ResourceMap } from './types';
 
-const kafkaHost = process.env.KAFKA_HOST || 'localhost';
+const kafkaHosts = process.env.KAFKA_HOST || 'kafka-01';
 const kafkaPort = process.env.KAFKA_PORT || '9092';
+
+let brokersString: string[] = [];
+kafkaHosts.split(',').forEach((host) => {
+  brokersString.push(`${host}:${kafkaPort}`);
+});
 
 const kafka = new Kafka({
   logLevel: logLevel.INFO,
-  brokers: [`${kafkaHost}:${kafkaPort}`],
+  brokers: brokersString,
   clientId: 'kafka-unbundler-consumer',
 });
 
