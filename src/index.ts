@@ -5,10 +5,7 @@ import { Bundle, ResourceMap } from './types';
 const kafkaHosts = process.env.KAFKA_HOST || 'kafka-01';
 const kafkaPort = process.env.KAFKA_PORT || '9092';
 
-let brokersString: string[] = [];
-kafkaHosts.split(',').forEach((host) => {
-  brokersString.push(`${host}:${kafkaPort}`);
-});
+const brokersString: string[] = kafkaHosts.split(',').map(host => `${host}:${kafkaPort}`);
 
 const kafka = new Kafka({
   logLevel: logLevel.INFO,
